@@ -1,131 +1,114 @@
-use std::array;
+use colored::Colorize;
+use std::io;
 
 fn main() {
 
-    _section("control flow");
-    let val = 4;
-    let x = less_than_3(val);
-    println!("4 < 3 = {x}");
+    _sec("conditional statements");
+    // Take in user input
+    println!("Check if 'a' is in provided string: ");
+    let input = take_user_input();
+    conditional_statements(input);
 
-    if x == true {
-        println!("condition is true");
+    _sec("condition logic cont.");
+    // Take in numeric input
+    println!("Check if provided number is even: ");
+    let input = loop {
+        let input = take_user_input();
+        match input.trim().parse() {
+            Ok(num) => {
+                break num
+            },
+            Err(_) => {
+                println!("{}", "Please provide numeric input".red());
+                continue
+            }
+        };
+    };
+    let even = check_if_even(input);
+    let example = if even {2} else {1};
+    println!("{} -- An example of a similar number is {}", even, example);
+
+    //#################### Show regular loops ####################//
+    // Let's count up throughout the loop
+    let mut counter = 0;
+    loop {
+        if counter == 10 {
+            println!("Counting is done! {counter}");
+            break
+        }
+        else {
+            counter += 1
+        }
     }
-    else {
-        println!("condition is false");
-    }
 
-    // We can also assign values using control flow
-    let size = if x {"smaller"} else {"larger"};
-    println!("{val} is {size} than 3");
+    // We can also return the loop as a result; like a block
+    let mut counter_2 = 0;
+    let result = loop {
 
+        if counter_2 == 100_000 {
+            break counter_2
+        }
 
-    let val = 1;
-    let x = less_than_3(val);
-    println!("1 < 3 = {x}");
-
-    if x == true {
-        println!("condition is true");
-    }
-    else {
-        println!("condition is false");
-    }
-
-    // We can also assign values using control flow
-    let size = if x {"smaller"} else {"larger"};
-    println!("{val} is {size} than 3");
-
-    // Test out looping
-    _section("loops");
-    loop_loops(15);
-
-    // Test out nested and named loops
-    _section("nested loops");
-    loop_nested();
-
-    // Try while loops
-    _section("while loops");
-    while_loops(10);
-
-    // Try for loops
-    _section("for loops");
-    let list = vec!["a", "b", "c"];
-    str_for_loops(&list);
-}
-
-fn _section(name:&str) {
-    println!("\n");
-    println!("{name}");
-    println!("{}", "=".repeat(name.len()))
-
-
-}
-
-fn less_than_3(x: i32) -> bool {
-    x < 3
-}
-
-fn loop_loops(limit: i32) {
-    let mut count = 0;
-
-    let res = loop {
-        count += 1;
-
-        if count == limit {
-            break count * 2
+        else {
+            counter_2 += 1;
+            //println!("\rCounting ...");
+            //print!("\x1B[2K");
         }
     };
 
-    println!("Limit: {limit} -- Results: {res}")
+    print!("Second counter: {counter_2} {result}");
 
+    //#################### Show while loops ####################//
+    _sec("While loops");
+    let mut while_var = 12;
+        while while_var % 11 != 0 {
+            while_var += 1;
+        };
+    println!("while_var % 11 != 0: {while_var}");
+
+    //#################### Show for-in loops ####################//
+    _sec("For-in loops");
+    let mut arr: [i32; 6] = [0, 10, 20, 30, 40, 50];
+    let mut sum = 0;
+    for i in arr.iter_mut() {
+        *i += 10;
+        sum += *i;
+    };
+    println!("{:?}: {sum}", arr);
+
+    // Loop using a range expression; the `=` means inclusive
+    for i in 1..=5 {
+        println!("{i}");
+    }
+
+    
+} // end main
+
+fn _sec(title:&str){
+   println!("\n{title}");
+   println!("{}", "-".repeat(title.len()))
 }
 
-fn loop_nested() {
-    // init the count
-    let mut count = 0;
-    println!("count = {count}");
+fn take_user_input() -> String {
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line");
+    input
+}
 
-    // start outer loop
-    let mut rem = 10;
-
-    'outer_loop: loop {
-        println!("remaining: {rem}");
-
-        // start inner loop
-        'inner_loop: loop {
-            if count == 2 {
-                break 'outer_loop;
-            }
-
-            if rem == 9 {
-                break 'inner_loop;
-            }
-            rem -= 1
+fn conditional_statements(input:String) {
+    if input.contains("a") {
+        let s = format!("{} '{}'", "There is an 'a' in", input.trim());
+        println!("{}", s.green())
+    }
+    else {
+        let s = format!("{} '{}'", "There is no 'a' in", input.trim());
+        println!("{}", s.red())
             
-
-        } // end inner_loop
-        
-        count += 1
-
-    } // end outer_loop
-    println!("End count: {count}")
+    }
 }
 
-fn while_loops(count:u32) {
-    let mut count = count;
-
-    while count != 0 {
-        println!("T-minus: {count}!");
-
-        count -= 1;
-
-    }
-    println!("LIFTOFF!")
-}
-
-fn str_for_loops(list: &[&str]) {
-    let mut _n = 0;
-    for i in list{
-        println!("{_n}: {i}");
-        _n += 1
-    }
+fn check_if_even(num:i32) -> bool {
+    num % 2 == 0
 }
