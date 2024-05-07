@@ -17,7 +17,26 @@ fn main() {
 
     _sec("derefrencing pointers");
     let x = Box::new(1);
-    derefrencing_pointers(x)
+    derefrencing_pointers(x);
+
+    _sec("mutable references");
+    let mut s1 = String::from("Hello");
+    let s2 = &mut s1;
+    s2.push_str("! Also, hi!");
+
+    //println!("{s2} -- {s1}"); // does not work because println! is borrowing s1 in an immtable manner
+                                // but s2 borrows s1 as mutable
+
+    // Fix; automatic de-allocation
+    println!("{s2}"); // once `s2` is no longer being used, it is deallocated and is no longer referencing s1
+    println!("{s1}");
+
+    _sec("Working with slices");
+    let array = [1,2,3,4,5];
+    let slice1 = &array[0..=3]; // need to reference to the variable to take a slice
+
+    println!("array: {:?} -- slice1:{:?}", array, slice1);
+
 }
 
 
