@@ -6,9 +6,17 @@
 
 */
 
+// Bring neccessary modules into scope
+use unicode_segmentation::UnicodeSegmentation;
+use std::collections::HashMap;
+
 mod modules;
 
 fn main() {
+
+    //#################### Start vector exercises ####################//
+    modules::_sec("Vectors examples");
+
     let empty_vec = modules::vectors::make_new_empty_vector();
     let mut vec1 = empty_vec;
     vec1.push(0);
@@ -73,5 +81,78 @@ fn main() {
             _ => println!("Data at col {n} is not an integer")
         };
         n+=1;
+    } // end match
+
+
+    //#################### Start string exercises ####################//
+    modules::_sec("String exercises");
+    
+    let empty_string = modules::strings::make_new_empty_string();
+    println!("empty string: {empty_string}");
+
+    let new_string = modules::strings::make_string_from_str_slice("test string");
+    println!("new string: {new_string}");
+
+    // Manipulate empty string and add to it; use borrowing to be rid of new_string after push
+    let mut mod_string = empty_string;
+    mod_string.push_str("This string has been modified");
+    println!("modified string from empty: {mod_string}");
+
+/*
+ *    let cat_string = new_string + " + " + &mod_string; // needs to be a reference here; concatting strings works with
+ *                                                // owned + borrowed pattern only
+ *    println!("concattenated string: {cat_string}");
+ */
+
+    //println!("new_string: {new_string}"); // does not work because `+` takes ownership of the left-side string
+    // We can concat strings without taking ownership though using `format!()` macro
+    let cat_string = format!("{} + {}", new_string, mod_string);
+    println!("cat_string: {cat_string}");
+    //println!("mod_string: {mod_string}"); works because no ownership taken
+
+    // String contents can be accessed in mutliple ways
+    let s = "string".to_string();
+
+    // Bytes can also be accessed
+    println!("\nAccessing strings using bytes");
+    for (n,b) in s.bytes().enumerate(){
+        println!("{n}) {b}");
     }
-}
+
+    // Chars are equivalent to letters in english since english letters are one-byte encoded
+    println!("Accessing string using chars");
+    for (n,c) in s.chars().enumerate() {
+        println!("{n}) {c}");
+    }
+
+    // We can also access the grapheme clusters using a crate; unicode-segmentation
+    println!("Accessing string using grapheme clusters");
+    for (n,g) in s.graphemes(true).enumerate(){
+        println!("{n}) {g}");
+    }
+
+
+    //#################### HashMaps section ####################//
+    modules::_sec("HashMaps exercises");
+    
+    let mut hashmap: HashMap<String, i32> = HashMap::new();
+    hashmap.insert("blue".to_string(), 20);
+    hashmap.insert("yellow".to_string(), 10);
+    println!("{:#?}", hashmap);
+
+    let blue_score = hashmap.get("blue");
+    println!("The score for blue is {:?}", blue_score);
+
+    // We can also conditionally add to the hashmap using entry().or_insert() method
+    hashmap.entry("yellow".to_string()).or_insert(100); // unchanged; it already exists
+    hashmap.entry("black".to_string()).or_insert(99); // added, did not previously exist
+
+    println!("\nIterate through the key-value pairs in a hashmap");
+    for (k,v) in hashmap {
+        println!("{k}: {v}");
+    }
+
+    let word_counts = modules::hashmaps::count_word_occurrences("hello world. hello again world");
+    println!("{:#?}", word_counts);
+
+} // end main
