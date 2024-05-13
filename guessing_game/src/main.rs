@@ -5,6 +5,25 @@ use std::io; // input/output library
 use rand::Rng; // random number generator library
 use std::cmp::Ordering; // library for comparing ordering
 
+// Set up a custom data type using structs to validate guess
+struct Guess {
+    value:i32
+}
+
+impl Guess {
+
+    fn new(value:i32) -> Guess {
+        if 1 > value || value > 100 {
+            panic!("Guess must be between 1 and 100");
+        }
+        else {Guess{value}}
+    } // end new()
+
+
+    fn value(&self) -> i32 {self.value}
+
+}
+
 // Create the main function
 fn main() {
     
@@ -30,7 +49,7 @@ fn main() {
 
         // Turn the string variable into numeric; input will always be string
         // Using `match` allows us to perform logic and inform user to provide a correct guess without breaking the code
-        let guess: u32 = match guess
+        let guess: i32 = match guess
             .trim()  // remove whitespaces and newlines
             .parse() { // turn the stirng into what it has been typed to (u32 here)
                 Ok(num) => num,
@@ -38,6 +57,8 @@ fn main() {
                     println!("{guess} is not a number. Please provide a number"); continue;
                 },
             };
+        let guess = Guess::new(guess);
+        let guess = guess.value();
 
         // Compare the strings
         match guess.cmp(&secret_number) {
