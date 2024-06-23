@@ -18,7 +18,7 @@ struct Point<T, U> {
     y: U
 }
 
-// Set up implication block to work with all data types
+// Set up implimentation block to work with all data types
 impl <T, U> Point<T, U> {
 
     fn x(&self) -> &T {&self.x}

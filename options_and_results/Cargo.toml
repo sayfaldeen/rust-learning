@@ -1,6 +1,5 @@
-workspace = { members = ["options"] }
 [package]
-name = "generics"
+name = "options_and_results"
 version = "0.1.0"
 edition = "2021"
 
